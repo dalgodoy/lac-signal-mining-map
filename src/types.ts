@@ -15,7 +15,7 @@ export interface Initiative {
   rawIndex: number;
 }
 
-export type CategoryKey = 'school' | 'regional conference' | 'national conference' | 'society' | 'other' | string;
+export type CategoryKey = 'school' | 'regional conference' | 'national conference' | 'society' | 'one-time event' | 'workshop' | 'other' | string;
 
 export interface CategoryStyle {
   bg: string;
@@ -39,5 +39,5 @@ export interface DataSourceState {
   autoRefresh: boolean;
 }
 
-export type PageView = 'map' | 'directory' | 'stats' | 'data' | 'about';
+export type PageView = 'map' | 'directory' | 'stats';
 

@@ -7,12 +7,10 @@ import {
   Award, 
   GraduationCap, 
   Users, 
-  MapPin, 
   Layers, 
   ArrowRight,
-  TrendingUp,
   Cpu,
-  Sparkles
+  Calendar
 } from 'lucide-react';
 
 interface StatsPageProps {
@@ -39,6 +37,7 @@ export const StatsPage: React.FC<StatsPageProps> = ({
     let regionalConfCount = 0;
     let nationalConfCount = 0;
     let societiesCount = 0;
+    let oneTimeCount = 0;
 
     initiatives.forEach((item) => {
       // Category
@@ -50,9 +49,10 @@ export const StatsPage: React.FC<StatsPageProps> = ({
       else if (lowerCat.includes('regional')) regionalConfCount++;
       else if (lowerCat.includes('national') || lowerCat.includes('nacional')) nationalConfCount++;
       else if (lowerCat.includes('society') || lowerCat.includes('sociedad')) societiesCount++;
+      else if (lowerCat.includes('one-time') || lowerCat.includes('non-recurrent')) oneTimeCount++;
 
       // Country
-      const country = (item.country || 'Sin definir').trim();
+      const country = (item.country || 'Undefined').trim();
       countryCounts[country] = (countryCounts[country] || 0) + 1;
 
       // Topic words
@@ -60,7 +60,7 @@ export const StatsPage: React.FC<StatsPageProps> = ({
         const words = item.topic.split(/[,/&+\s]+/).map(w => w.trim()).filter(w => w.length > 2);
         words.forEach(w => {
           const norm = w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
-          if (!['And', 'The', 'Del', 'Los', 'Las', 'Para', 'Con', 'Una'].includes(norm)) {
+          if (!['And', 'The', 'Del', 'Los', 'Las', 'Para', 'Con', 'Una', 'Por'].includes(norm)) {
             topicKeywords[norm] = (topicKeywords[norm] || 0) + 1;
           }
         });
@@ -82,6 +82,7 @@ export const StatsPage: React.FC<StatsPageProps> = ({
       regionalConfCount,
       nationalConfCount,
       societiesCount,
+      oneTimeCount,
       topKeywords,
       totalCountries: Object.keys(countryCounts).length,
     };
@@ -95,60 +96,71 @@ export const StatsPage: React.FC<StatsPageProps> = ({
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold mb-2">
             <BarChart3 className="w-3.5 h-3.5" />
-            <span>Página Estática • Métricas & Estadísticas</span>
+            <span>Analytical Overview</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Panorama Analítico de la Computación en LATAM
+            Computing Initiatives in LATAM & Caribbean
           </h2>
           <p className="text-sm text-slate-600 mt-1 max-w-2xl">
-            Métricas calculadas en tiempo real en tu navegador. Conoce la distribución por país, tipo de iniciativa, escuelas de formación y sociedades científicas en la región.
+            Key ecosystem metrics: distribution by country, category breakdown, research schools, and scientific societies across the region.
           </p>
         </div>
 
-        {/* Top 4 KPI Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+        {/* Top 5 KPI Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Iniciativas</span>
-              <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
-                <Layers className="w-5 h-5" />
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Initiatives</span>
+              <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
+                <Layers className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-slate-900 mt-3">{total}</div>
-            <p className="text-xs text-slate-500 mt-1">Registradas en el ecosistema</p>
+            <div className="text-2xl font-black text-slate-900 mt-2">{total}</div>
+            <p className="text-[11px] text-slate-500 mt-0.5">Total registered</p>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Países</span>
-              <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
-                <Globe className="w-5 h-5" />
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Countries</span>
+              <div className="p-1.5 bg-emerald-50 text-emerald-600 rounded-lg">
+                <Globe className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-slate-900 mt-3">{stats.totalCountries}</div>
-            <p className="text-xs text-slate-500 mt-1">Países y subregiones</p>
+            <div className="text-2xl font-black text-slate-900 mt-2">{stats.totalCountries}</div>
+            <p className="text-[11px] text-slate-500 mt-0.5">Countries & areas</p>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Sociedades</span>
-              <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
-                <Users className="w-5 h-5" />
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Societies</span>
+              <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
+                <Users className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-slate-900 mt-3">{stats.societiesCount}</div>
-            <p className="text-xs text-slate-500 mt-1">Sociedades científicas</p>
+            <div className="text-2xl font-black text-slate-900 mt-2">{stats.societiesCount}</div>
+            <p className="text-[11px] text-slate-500 mt-0.5">Scientific societies</p>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Escuelas</span>
-              <div className="p-2 bg-amber-50 text-amber-600 rounded-xl">
-                <GraduationCap className="w-5 h-5" />
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Schools</span>
+              <div className="p-1.5 bg-amber-50 text-amber-600 rounded-lg">
+                <GraduationCap className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-3xl font-black text-slate-900 mt-3">{stats.schoolsCount}</div>
-            <p className="text-xs text-slate-500 mt-1">Escuelas de especialización</p>
+            <div className="text-2xl font-black text-slate-900 mt-2">{stats.schoolsCount}</div>
+            <p className="text-[11px] text-slate-500 mt-0.5">Training schools</p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs col-span-2 sm:col-span-1">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">One-time Events</span>
+              <div className="p-1.5 bg-purple-50 text-purple-600 rounded-lg">
+                <Calendar className="w-4 h-4" />
+              </div>
+            </div>
+            <div className="text-2xl font-black text-slate-900 mt-2">{stats.oneTimeCount}</div>
+            <p className="text-[11px] text-slate-500 mt-0.5">Special editions</p>
           </div>
         </div>
 
@@ -162,10 +174,10 @@ export const StatsPage: React.FC<StatsPageProps> = ({
                 <div className="flex items-center gap-2">
                   <Award className="w-5 h-5 text-indigo-600" />
                   <h3 className="text-base font-extrabold text-slate-900">
-                    Distribución por Categoría
+                    Distribution by Category
                   </h3>
                 </div>
-                <span className="text-xs font-semibold text-slate-400">Click para filtrar</span>
+                <span className="text-xs font-semibold text-slate-400">Click to filter</span>
               </div>
 
               <div className="space-y-3.5">
@@ -202,12 +214,12 @@ export const StatsPage: React.FC<StatsPageProps> = ({
             </div>
 
             <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-              <span className="text-slate-500">Filtrar directamente en el directorio</span>
+              <span className="text-slate-500">Filter directly in the directory</span>
               <button
                 onClick={onGoToDirectory}
-                className="text-indigo-600 hover:text-indigo-800 font-bold inline-flex items-center gap-1"
+                className="text-indigo-600 hover:text-indigo-800 font-bold inline-flex items-center gap-1 cursor-pointer"
               >
-                <span>Ir al Directorio</span>
+                <span>Go to Directory</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -220,10 +232,10 @@ export const StatsPage: React.FC<StatsPageProps> = ({
                 <div className="flex items-center gap-2">
                   <Globe className="w-5 h-5 text-indigo-600" />
                   <h3 className="text-base font-extrabold text-slate-900">
-                    Iniciativas por País o Región
+                    Initiatives by Country or Region
                   </h3>
                 </div>
-                <span className="text-xs font-semibold text-slate-400">Click para filtrar</span>
+                <span className="text-xs font-semibold text-slate-400">Click to filter</span>
               </div>
 
               <div className="space-y-2.5 max-h-[380px] overflow-y-auto pr-1">
@@ -256,12 +268,12 @@ export const StatsPage: React.FC<StatsPageProps> = ({
             </div>
 
             <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-              <span className="text-slate-500">{stats.totalCountries} países representados</span>
+              <span className="text-slate-500">{stats.totalCountries} countries represented</span>
               <button
                 onClick={onGoToDirectory}
-                className="text-indigo-600 hover:text-indigo-800 font-bold inline-flex items-center gap-1"
+                className="text-indigo-600 hover:text-indigo-800 font-bold inline-flex items-center gap-1 cursor-pointer"
               >
-                <span>Ver todos en tabla</span>
+                <span>View all in table</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
@@ -274,11 +286,11 @@ export const StatsPage: React.FC<StatsPageProps> = ({
           <div className="flex items-center gap-2 mb-3">
             <Cpu className="w-5 h-5 text-indigo-600" />
             <h3 className="text-base font-extrabold text-slate-900">
-              Ejes Temáticos y Áreas Destacadas en la Región
+              Focus Areas & Regional Highlights
             </h3>
           </div>
           <p className="text-xs text-slate-500 mb-4">
-            Palabras clave más frecuentes detectadas en los tópicos y títulos de las iniciativas registradas.
+            Most frequent topics and subject keywords identified across registered initiatives.
           </p>
 
           <div className="flex flex-wrap gap-2">

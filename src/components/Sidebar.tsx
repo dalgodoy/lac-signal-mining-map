@@ -4,11 +4,9 @@ import { getCategoryStyle } from '../data/fallbackData';
 import { StatsView } from './StatsView';
 import { 
   Search, 
-  Filter, 
   MapPin, 
   ExternalLink, 
   Navigation, 
-  FileSpreadsheet, 
   RotateCcw, 
   Layers, 
   BarChart3, 
@@ -46,7 +44,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   selectedCategory,
   onCategoryChange,
   onResetFilters,
-  dataSource,
   isOpenMobile,
   onCloseMobile,
 }) => {
@@ -73,13 +70,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
             type="text"
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Buscar por nombre, tema, país, autor..."
-            className="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
+            placeholder="Search by name, topic, country, author..."
+            className="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all font-medium"
           />
           {searchTerm && (
             <button
               onClick={() => onSearchChange('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -90,14 +87,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="grid grid-cols-2 gap-2.5">
           <div>
             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-              País / Región
+              Country / Region
             </label>
             <select
               value={selectedCountry}
               onChange={(e) => onCountryChange(e.target.value)}
-              className="w-full py-2 px-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-700"
+              className="w-full py-2 px-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-700 cursor-pointer"
             >
-              <option value="all">Todos los países ({countries.length})</option>
+              <option value="all">All countries ({countries.length})</option>
               {countries.map((country) => (
                 <option key={country} value={country}>
                   {country}
@@ -108,14 +105,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           <div>
             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-              Categoría
+              Category
             </label>
             <select
               value={selectedCategory}
               onChange={(e) => onCategoryChange(e.target.value)}
-              className="w-full py-2 px-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-700"
+              className="w-full py-2 px-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-700 cursor-pointer"
             >
-              <option value="all">Todas las categorías</option>
+              <option value="all">All categories</option>
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
                   {cat}
@@ -129,14 +126,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {hasActiveFilters && (
           <div className="flex items-center justify-between pt-1 text-xs">
             <span className="text-slate-500 font-medium">
-              Mostrando <strong className="text-slate-800">{filteredInitiatives.length}</strong> de {initiatives.length}
+              Showing <strong className="text-slate-800">{filteredInitiatives.length}</strong> of {initiatives.length}
             </span>
             <button
               onClick={onResetFilters}
-              className="text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1 text-[11px]"
+              className="text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1 text-[11px] cursor-pointer"
             >
               <RotateCcw className="w-3 h-3" />
-              <span>Limpiar filtros</span>
+              <span>Clear filters</span>
             </button>
           </div>
         )}
@@ -146,25 +143,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="flex border-b border-slate-100 text-xs font-bold uppercase tracking-wider bg-slate-50/60 flex-shrink-0">
         <button
           onClick={() => setActiveTab('list')}
-          className={`flex-1 py-3 text-center border-b-2 flex items-center justify-center gap-2 transition-colors ${
+          className={`flex-1 py-3 text-center border-b-2 flex items-center justify-center gap-2 transition-colors cursor-pointer ${
             activeTab === 'list'
               ? 'border-indigo-600 text-indigo-600 bg-white'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           <Layers className="w-3.5 h-3.5" />
-          <span>Iniciativas ({filteredInitiatives.length})</span>
+          <span>Initiatives ({filteredInitiatives.length})</span>
         </button>
         <button
           onClick={() => setActiveTab('stats')}
-          className={`flex-1 py-3 text-center border-b-2 flex items-center justify-center gap-2 transition-colors ${
+          className={`flex-1 py-3 text-center border-b-2 flex items-center justify-center gap-2 transition-colors cursor-pointer ${
             activeTab === 'stats'
               ? 'border-indigo-600 text-indigo-600 bg-white'
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           <BarChart3 className="w-3.5 h-3.5" />
-          <span>Estadísticas</span>
+          <span>Statistics</span>
         </button>
       </div>
 
@@ -175,16 +172,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {filteredInitiatives.length === 0 ? (
               <div className="text-center py-16 px-4 text-slate-400">
                 <Info className="w-10 h-10 mx-auto mb-3 opacity-40" />
-                <p className="font-semibold text-slate-700 text-sm">No se encontraron iniciativas</p>
+                <p className="font-semibold text-slate-700 text-sm">No initiatives found</p>
                 <p className="text-xs text-slate-500 mt-1 max-w-xs mx-auto">
-                  Prueba cambiando tus términos de búsqueda o limpiando los filtros seleccionados.
+                  Try changing your search keywords or resetting the selected filters.
                 </p>
                 <button
                   onClick={onResetFilters}
-                  className="mt-4 px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl text-xs font-bold transition-colors inline-flex items-center gap-1.5"
+                  className="mt-4 px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-xl text-xs font-bold transition-colors inline-flex items-center gap-1.5 cursor-pointer"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  <span>Restablecer filtros</span>
+                  <span>Reset filters</span>
                 </button>
               </div>
             ) : (
@@ -228,14 +225,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
                       {item.topic && item.topic !== 'General' && (
                         <p className="text-xs font-semibold text-indigo-600 mt-1 flex items-center gap-1">
-                          <Tag className="w-3 h-3 text-indigo-400" />
+                          <Tag className="w-3 h-3 text-indigo-400 shrink-0" />
                           <span>{item.topic}</span>
                         </p>
                       )}
 
-                      <p className="text-xs text-slate-600 mt-2 line-clamp-2 font-normal leading-relaxed">
-                        {item.description}
-                      </p>
+                      {item.description ? (
+                        <p className="text-xs text-slate-600 mt-2 line-clamp-2 font-normal leading-relaxed">
+                          {item.description}
+                        </p>
+                      ) : null}
                     </div>
 
                     <div className="flex items-center justify-between mt-3 pl-2 pt-2.5 border-t border-slate-100">
@@ -247,11 +246,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           onClick={(e) => e.stopPropagation()}
                           className="text-xs text-indigo-600 hover:text-indigo-800 font-bold inline-flex items-center gap-1 hover:underline"
                         >
-                          <span>Sitio Web</span>
+                          <span>Website</span>
                           <ExternalLink className="w-3 h-3" />
                         </a>
                       ) : (
-                        <span className="text-[11px] text-slate-400 italic">Sin enlace directo</span>
+                        <span className="text-[11px] text-slate-400 italic">No direct link</span>
                       )}
 
                       <button
@@ -260,10 +259,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           onSelectInitiative(item);
                           if (window.innerWidth < 1024) onCloseMobile();
                         }}
-                        className="text-xs bg-slate-100 group-hover:bg-indigo-50 group-hover:text-indigo-600 text-slate-700 font-bold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1"
+                        className="text-xs bg-slate-100 group-hover:bg-indigo-50 group-hover:text-indigo-600 text-slate-700 font-bold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
                       >
                         <Navigation className="w-3 h-3" />
-                        <span>Ubicar</span>
+                        <span>Locate</span>
                       </button>
                     </div>
                   </div>
@@ -289,11 +288,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Footer Info */}
       <div className="p-3.5 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex flex-col gap-1.5 flex-shrink-0">
         <div className="flex items-center gap-1.5 text-slate-700">
-          <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
-          <span className="font-bold text-[11px]">Sincronización en vivo</span>
+          <Layers className="w-3.5 h-3.5 text-indigo-600" />
+          <span className="font-bold text-[11px]">LATAM & Caribbean Ecosystem</span>
         </div>
         <div className="text-[11px] text-slate-500 leading-tight">
-          Los cambios realizados en la planilla de Google se reflejan de forma automática en el mapa.
+          Open community catalog of computing research and educational initiatives.
         </div>
       </div>
     </aside>

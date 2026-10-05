@@ -1,6 +1,6 @@
 {
   "name": "Remix Remix Mapa de Iniciativas de Computación LATAM \u0026 Caribe",
-  "description": "Mapa interactivo y panel analítico de iniciativas, eventos y sociedades de computación en América Latina y el Caribe sincronizado en tiempo real con Google Sheets.",
+  "description": "Interactive map, directory, and analytical overview of computing initiatives, events, and scientific societies in Latin America and the Caribbean.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

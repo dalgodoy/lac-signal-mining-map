@@ -18,31 +18,21 @@ import { InteractiveMap } from './components/InteractiveMap';
 import { InitiativeDetailModal } from './components/InitiativeDetailModal';
 import { DirectoryPage } from './pages/DirectoryPage';
 import { StatsPage } from './pages/StatsPage';
-import { DataExportPage } from './pages/DataExportPage';
-import { AboutPage } from './pages/AboutPage';
 import { Menu, X } from 'lucide-react';
 
 const HASH_TO_PAGE: Record<string, PageView> = {
-  '#mapa': 'map',
   '#map': 'map',
-  '#directorio': 'directory',
+  '#mapa': 'map',
   '#directory': 'directory',
-  '#catalogo': 'directory',
-  '#estadisticas': 'stats',
+  '#directorio': 'directory',
   '#stats': 'stats',
-  '#datos': 'data',
-  '#data': 'data',
-  '#exportar': 'data',
-  '#acerca': 'about',
-  '#about': 'about',
+  '#estadisticas': 'stats',
 };
 
 const PAGE_TO_HASH: Record<PageView, string> = {
-  map: '#mapa',
-  directory: '#directorio',
-  stats: '#estadisticas',
-  data: '#datos',
-  about: '#acerca',
+  map: '#map',
+  directory: '#directory',
+  stats: '#stats',
 };
 
 export default function App() {
@@ -110,7 +100,7 @@ export default function App() {
     }, 4000);
   };
 
-  // Client-side loader to fetch data from the Google Sheet
+  // Client-side loader to fetch updated data
   const loadSheetData = useCallback(async (sheetId: string, gid: string, isSilent = false) => {
     if (!isSilent) {
       setDataSource((prev) => ({ ...prev, status: 'loading' }));
@@ -128,22 +118,22 @@ export default function App() {
         errorMessage: undefined,
       }));
       if (!isSilent) {
-        showNotification(`Sincronizado: ${data.length} iniciativas desde Google Sheets`);
+        showNotification(`Updated: ${data.length} initiatives`);
       }
     } catch (err: any) {
-      console.warn('Could not refresh from Google Sheets, using static dataset:', err);
+      console.warn('Could not refresh online data, using static dataset:', err);
       setDataSource((prev) => ({
         ...prev,
         status: 'error',
-        errorMessage: err.message || 'Sin conexión a la planilla de Google',
+        errorMessage: err.message || 'Offline',
       }));
       if (!isSilent) {
-        showNotification(`Activo en modo estático local (${STATIC_INITIATIVES.length} iniciativas disponibles)`);
+        showNotification(`Offline mode active (${STATIC_INITIATIVES.length} initiatives available)`);
       }
     }
   }, []);
 
-  // Initial client-side attempt to sync with latest Google Sheet
+  // Initial client-side attempt to sync latest data
   useEffect(() => {
     loadSheetData(dataSource.sheetId, dataSource.gid, true);
   }, [loadSheetData, dataSource.sheetId, dataSource.gid]);
@@ -196,33 +186,6 @@ export default function App() {
     setSelectedCategory('all');
   };
 
-  // Custom data source replacement (e.g. from local CSV)
-  const handleSetCustomInitiatives = (data: Initiative[], label: string) => {
-    setInitiatives(data);
-    setDataSource((prev) => ({
-      ...prev,
-      type: 'custom_csv',
-      rowCount: data.length,
-      lastFetched: new Date(),
-      status: 'success',
-      errorMessage: undefined,
-    }));
-    showNotification(`Datos cargados: ${data.length} iniciativas (${label})`);
-  };
-
-  const handleResetToStatic = () => {
-    setInitiatives(STATIC_INITIATIVES);
-    setDataSource((prev) => ({
-      ...prev,
-      type: 'fallback',
-      rowCount: STATIC_INITIATIVES.length,
-      lastFetched: null,
-      status: 'idle',
-      errorMessage: undefined,
-    }));
-    showNotification(`Restaurado snapshot estático (${STATIC_INITIATIVES.length} iniciativas)`);
-  };
-
   return (
     <div className="bg-slate-50 text-slate-800 h-screen w-screen overflow-hidden flex flex-col font-sans">
       
@@ -270,8 +233,8 @@ export default function App() {
             {/* Floating Mobile Toggle Button */}
             <button
               onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-              className="lg:hidden absolute bottom-5 right-5 z-[500] bg-indigo-600 hover:bg-indigo-700 text-white p-3.5 rounded-full shadow-2xl transition-transform active:scale-95"
-              title="Abrir panel"
+              className="lg:hidden absolute bottom-5 right-5 z-[500] bg-indigo-600 hover:bg-indigo-700 text-white p-3.5 rounded-full shadow-2xl transition-transform active:scale-95 cursor-pointer"
+              title={isMobileSidebarOpen ? "Close panel" : "Open panel"}
             >
               {isMobileSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -320,23 +283,6 @@ export default function App() {
               setSelectedCategory(cat);
               navigateToPage('directory');
             }}
-            onGoToDirectory={() => navigateToPage('directory')}
-          />
-        )}
-
-        {activePage === 'data' && (
-          <DataExportPage
-            initiatives={initiatives}
-            dataSource={dataSource}
-            onRefreshSheet={() => loadSheetData(dataSource.sheetId, dataSource.gid)}
-            onSetCustomInitiatives={handleSetCustomInitiatives}
-            onResetToStatic={handleResetToStatic}
-          />
-        )}
-
-        {activePage === 'about' && (
-          <AboutPage
-            onGoToMap={() => navigateToPage('map')}
             onGoToDirectory={() => navigateToPage('directory')}
           />
         )}

@@ -19,22 +19,22 @@ const MAP_THEMES: Record<
   { name: string; description: string; url: string; attribution: string; maxZoom: number }
 > = {
   topo: {
-    name: 'Topográfico',
-    description: 'Relieve físico y carreteras (Sin API Key)',
+    name: 'Topographic',
+    description: 'Physical relief and terrain',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
     attribution: '&copy; Esri &mdash; World Topo Map',
     maxZoom: 19,
   },
   osm: {
     name: 'OpenStreetMap',
-    description: 'Estándar abierto y libre (Sin API Key)',
+    description: 'Open collaborative map',
     url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a>',
     maxZoom: 19,
   },
   satellite: {
-    name: 'Satélite',
-    description: 'Vista satelital de alta resolución (Sin API Key)',
+    name: 'Satellite',
+    description: 'High-resolution imagery',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attribution: '&copy; Esri &mdash; Earthstar Geographics',
     maxZoom: 18,
@@ -194,13 +194,13 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           <div class="flex items-center justify-between pt-2 border-t border-slate-100 mt-2">
             ${item.url ? `
               <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold inline-flex items-center gap-1 hover:underline">
-                <span>Sitio Web</span>
+                <span>Website</span>
                 <span>↗</span>
               </a>
-            ` : '<span class="text-[11px] text-slate-400 italic">Sin enlace web</span>'}
+            ` : '<span class="text-[11px] text-slate-400 italic">No link available</span>'}
             
-            <button id="popup-detail-btn-${item.id}" class="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 font-semibold px-2.5 py-1 rounded-md transition-colors">
-              Ver detalle
+            <button id="popup-detail-btn-${item.id}" class="text-xs bg-slate-100 hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 font-semibold px-2.5 py-1 rounded-md transition-colors cursor-pointer">
+              View details
             </button>
           </div>
         </div>
@@ -264,8 +264,8 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         {/* Reset View */}
         <button
           onClick={handleResetMap}
-          title="Centrar en Latinoamérica"
-          className="p-2.5 bg-white hover:bg-slate-50 text-slate-700 rounded-xl shadow-md border border-slate-200 transition-all flex items-center justify-center hover:text-indigo-600 group"
+          title="Reset view to Latin America & Caribbean"
+          className="p-2.5 bg-white hover:bg-slate-50 text-slate-700 rounded-xl shadow-md border border-slate-200 transition-all flex items-center justify-center hover:text-indigo-600 group cursor-pointer"
         >
           <RotateCcw className="w-4 h-4 transition-transform group-hover:-rotate-45" />
         </button>
@@ -274,8 +274,8 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         <div className="relative">
           <button
             onClick={() => setIsLayerMenuOpen(!isLayerMenuOpen)}
-            title="Cambiar capa del mapa (Sin API Key)"
-            className={`p-2.5 rounded-xl shadow-md border transition-all flex items-center justify-center ${
+            title="Change map style"
+            className={`p-2.5 rounded-xl shadow-md border transition-all flex items-center justify-center cursor-pointer ${
               isLayerMenuOpen
                 ? 'bg-indigo-600 text-white border-indigo-700'
                 : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200 hover:text-indigo-600'
@@ -288,10 +288,9 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
           {isLayerMenuOpen && (
             <div className="absolute right-0 top-12 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 z-[500] animate-in fade-in slide-in-from-top-1 duration-150">
               <div className="px-3 py-1.5 border-b border-slate-100 mb-1">
-                <div className="text-xs font-bold text-slate-800">Estilo de Mapa</div>
-                <div className="text-[10px] text-emerald-600 font-medium flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                  100% Libre • Sin API Key
+                <div className="text-xs font-bold text-slate-800">Map Style</div>
+                <div className="text-[10px] text-slate-500 font-medium flex items-center gap-1">
+                  Base Tile Layers
                 </div>
               </div>
               <div className="space-y-1">
@@ -305,7 +304,7 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
                         setSelectedTheme(themeKey);
                         setIsLayerMenuOpen(false);
                       }}
-                      className={`w-full text-left px-3 py-2 rounded-xl transition-all flex items-center justify-between text-xs ${
+                      className={`w-full text-left px-3 py-2 rounded-xl transition-all flex items-center justify-between text-xs cursor-pointer ${
                         isSelected
                           ? 'bg-indigo-50 text-indigo-700 font-bold border border-indigo-200'
                           : 'hover:bg-slate-50 text-slate-700 font-medium'
@@ -330,15 +329,15 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
         <div className="flex flex-col bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
           <button
             onClick={handleZoomIn}
-            title="Acercar"
-            className="p-2.5 hover:bg-slate-50 text-slate-700 transition-colors border-b border-slate-100 flex items-center justify-center hover:text-indigo-600"
+            title="Zoom in"
+            className="p-2.5 hover:bg-slate-50 text-slate-700 transition-colors border-b border-slate-100 flex items-center justify-center hover:text-indigo-600 cursor-pointer"
           >
             <ZoomIn className="w-4 h-4" />
           </button>
           <button
             onClick={handleZoomOut}
-            title="Alejar"
-            className="p-2.5 hover:bg-slate-50 text-slate-700 transition-colors flex items-center justify-center hover:text-indigo-600"
+            title="Zoom out"
+            className="p-2.5 hover:bg-slate-50 text-slate-700 transition-colors flex items-center justify-center hover:text-indigo-600 cursor-pointer"
           >
             <ZoomOut className="w-4 h-4" />
           </button>
@@ -349,23 +348,27 @@ export const InteractiveMap: React.FC<InteractiveMapProps> = ({
       <div className="hidden sm:flex absolute bottom-4 left-4 z-[400] bg-white/95 backdrop-blur-xs px-3.5 py-2.5 rounded-xl border border-slate-200 shadow-md flex-wrap items-center gap-3 text-xs font-medium text-slate-700">
         <div className="flex items-center gap-1.5 font-bold text-slate-900 pr-1 border-r border-slate-200">
           <Layers className="w-3.5 h-3.5 text-indigo-600" />
-          <span>Categorías:</span>
+          <span>Categories:</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-emerald-100"></span>
-          <span>Escuela</span>
+          <span>School</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-rose-500 ring-2 ring-rose-100"></span>
-          <span>Conf. Regional</span>
+          <span>Regional Conf.</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-amber-500 ring-2 ring-amber-100"></span>
-          <span>Conf. Nacional</span>
+          <span>National Conf.</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 ring-2 ring-indigo-100"></span>
-          <span>Sociedad</span>
+          <span>Society</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-purple-500 ring-2 ring-purple-100"></span>
+          <span>One-time Event</span>
         </div>
       </div>
     </div>

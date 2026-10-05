@@ -100,7 +100,24 @@ export function parseRawCsvToInitiatives(csvText: string): Initiative[] {
     const country = (row[countryCol] || '').trim();
     const name = (row[nameCol] || '').trim();
     const topic = (row[topicCol] || '').trim();
-    const category = (row[catCol] || '').trim() || 'General';
+    const rawCategory = (row[catCol] || '').trim();
+    let category = rawCategory || 'General';
+    const lowerCat = rawCategory.toLowerCase();
+    if (lowerCat.includes('non-recurrent') || lowerCat.includes('one-time') || lowerCat.includes('one time') || lowerCat.includes('evento único') || lowerCat.includes('evento unico')) {
+      category = 'One-time Event';
+    } else if (lowerCat.includes('school') || lowerCat.includes('escuela')) {
+      category = 'School';
+    } else if (lowerCat.includes('regional')) {
+      category = 'Regional Conference';
+    } else if (lowerCat.includes('national') || lowerCat.includes('nacional')) {
+      category = 'National Conference';
+    } else if (lowerCat.includes('society') || lowerCat.includes('sociedad')) {
+      category = 'Society';
+    } else if (lowerCat.includes('workshop')) {
+      category = 'Workshop';
+    } else if (rawCategory.length > 0) {
+      category = rawCategory.charAt(0).toUpperCase() + rawCategory.slice(1);
+    }
     const rawLink = (row[linkCol] || '').trim();
     const locationRaw = locationCol >= 0 ? (row[locationCol] || '').trim() : '';
     const note = (row[noteCol] || '').trim();
@@ -129,13 +146,10 @@ export function parseRawCsvToInitiatives(csvText: string): Initiative[] {
       url = rawLink;
     } else if (rawLink && !description) {
       description = rawLink;
-    } else if (rawLink && description && rawLink !== description) {
-      description = `${rawLink} - ${description}`;
     }
 
-    if (!description) {
-      description = topic ? `Iniciativa de ${topic}` : 'Iniciativa de computación e investigación';
-    }
+    // Leave only what is in the sheet - no synthetic "Iniciativa de ..." fallback
+    description = description || '';
 
     // Prioritize Location (if exist) to resolve map coordinates
     const location = resolveLocationCoordinates(locationRaw, country);
